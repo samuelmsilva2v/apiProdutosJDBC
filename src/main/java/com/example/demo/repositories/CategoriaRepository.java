@@ -17,7 +17,7 @@ public class CategoriaRepository {
 
 			var connection = connectionFactory.getConnection();
 			var statement = connection.createStatement();
-			var result = statement.executeQuery("SELECT * FROM categorias");
+			var result = statement.executeQuery("SELECT * FROM categoria");
 
 			var lista = new ArrayList<Categoria>();
 
