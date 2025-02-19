@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dtos.ProdutoRequestDto;
+import com.example.demo.services.ProdutoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -15,11 +16,13 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/produtos")
 public class ProdutoController {
+	
+	private ProdutoService produtoService = new ProdutoService();
 
 	@Operation(summary = "Serviço para cadastrar um produto.")
 	@PostMapping("cadastrar")
-	public void cadastrarProduto(@RequestBody @Valid ProdutoRequestDto request) {
-		// TODO
+	public String cadastrarProduto(@RequestBody @Valid ProdutoRequestDto request) {
+		return produtoService.cadastrarProduto(request);
 	}
 	
 	@Operation(summary = "Serviço para atualizar um produto.")

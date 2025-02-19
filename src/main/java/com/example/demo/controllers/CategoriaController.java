@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @RestController
 @RequestMapping("/api/categorias")
 public class CategoriaController {
-
+	
 	private CategoriaRepository categoriaRepository = new CategoriaRepository();
 	
 	@Operation(summary = "Serviço para consultar todas as categorias.")
