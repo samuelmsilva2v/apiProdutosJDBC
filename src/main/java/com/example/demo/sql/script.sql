@@ -21,3 +21,5 @@ INSERT INTO categoria(id, nome) VALUES(gen_random_uuid(), 'Outros');
 
 SELECT * FROM categoria;
 
+SELECT * FROM produto;
+

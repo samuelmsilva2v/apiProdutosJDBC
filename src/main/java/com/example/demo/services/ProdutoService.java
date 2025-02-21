@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -27,15 +28,32 @@ public class ProdutoService {
 		return "Produto cadastrado com sucesso!";
 	}
 
-	public void atualizarProduto() {
-		// TODO
+	public String atualizarProduto(ProdutoRequestDto request, UUID id) {
+		
+		var produto = new Produto();
+		produto.setId(id);
+		produto.setNome(request.getNome());
+		produto.setPreco(request.getPreco());
+		produto.setQuantidade(request.getQuantidade());
+
+		produtoRepository.update(produto, request.getCategoriaId());
+		
+		return "Produto atualizado com sucesso!";
 	}
 
-	public void excluirProduto() {
-		// TODO
+	public String excluirProduto(UUID id) {
+		
+		produtoRepository.delete(id);
+		return "Produto excluído com sucesso!";
 	}
 
-	public void consultarProdutos() {
-		// TODO
+	public List<Produto> consultarProdutos() {
+
+		return produtoRepository.findAll();
+	}
+	
+	public List<Produto> consultarProdutosPorNome(String nome) {
+
+		return produtoRepository.findByName(nome);
 	}
 }

@@ -1,5 +1,7 @@
 package com.example.demo.repositories;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.example.demo.entities.Produto;
@@ -29,5 +31,109 @@ public class ProdutoRepository {
 		catch (Exception e) {
 			e.printStackTrace();
 		} 
+	}
+	
+	public void update(Produto produto, UUID categoriaId) {
+		
+		try {
+			
+			var connection = connectionFactory.getConnection();
+			
+			var statement = connection.prepareStatement("UPDATE produto SET nome = ?, preco = ?, quantidade = ?, categoria_id = ? WHERE id = ?");
+			statement.setString(1, produto.getNome());
+			statement.setDouble(2, produto.getPreco());
+			statement.setInt(3, produto.getQuantidade());	
+			statement.setObject(4, categoriaId);
+			statement.setObject(5, produto.getId());
+			statement.execute();
+			
+			connection.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void delete(UUID id) {
+
+		try {
+
+			var connection = connectionFactory.getConnection();
+
+			var statement = connection.prepareStatement("DELETE FROM produto WHERE id = ?");
+			statement.setObject(1, id);
+			statement.execute();
+
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public List<Produto> findAll() {
+		
+		try {
+		
+			var connection = connectionFactory.getConnection();
+
+			var statement = connection.prepareStatement("SELECT * FROM produto");
+			var result = statement.executeQuery();
+			
+			var produtos = new ArrayList<Produto>();
+
+			while (result.next()) {
+				
+				var produto = new Produto();
+				produto.setId(UUID.fromString(result.getString("id")));
+				produto.setNome(result.getString("nome"));
+				produto.setPreco(result.getDouble("preco"));
+				produto.setQuantidade(result.getInt("quantidade"));
+				
+				produtos.add(produto);
+			}
+			
+			connection.close();
+			
+			return produtos;
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<Produto> findByName(String nome) {
+		
+		try {
+			
+			var connection = connectionFactory.getConnection();
+            
+            var statement = connection.prepareStatement("SELECT * FROM produto WHERE nome ILIKE ? ORDER BY nome");
+            statement.setString(1, "%" + nome + "%");
+            
+            var result = statement.executeQuery();
+            
+            var produtos = new ArrayList<Produto>();
+            
+            while (result.next()) {
+            	
+                var produto = new Produto();
+                produto.setId(UUID.fromString(result.getString("id")));
+                produto.setNome(result.getString("nome"));
+                produto.setPreco(result.getDouble("preco"));
+                produto.setQuantidade(result.getInt("quantidade"));
+                
+                produtos.add(produto);
+            }
+            
+            connection.close();
+            return produtos;
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
