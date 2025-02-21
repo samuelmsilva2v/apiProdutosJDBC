@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,25 +32,25 @@ public class ProdutoController {
 	}
 	
 	@Operation(summary = "Serviço para atualizar um produto.")
-	@PutMapping("atualizar")
+	@PutMapping("atualizar/{id}")
 	public String atualizarProduto(@RequestBody @Valid ProdutoRequestDto request, @PathVariable UUID id) {
 		return produtoService.atualizarProduto(request, id);
 	}
 	
 	@Operation(summary = "Serviço para excluir um produto.")
-	@DeleteMapping("excluir")
+	@DeleteMapping("excluir/{id}")
 	public String excluirProduto(@PathVariable UUID id) {
 		return produtoService.excluirProduto(id);
 	}
 	
 	@Operation(summary = "Serviço para consultar todos os produtos.")
-	@PostMapping("consultar")
+	@GetMapping("consultar")
 	public List<Produto> consultarProdutos() {
 		return produtoService.consultarProdutos();
 	}
 	
 	@Operation(summary = "Serviço para consultar produtos por nome.")
-	@PostMapping("consultar/{nome}")
+	@GetMapping("consultar/{nome}")
 	public List<Produto> consultarProdutosPorNome(@PathVariable String nome) {
 		return produtoService.consultarProdutosPorNome(nome);
 	}
