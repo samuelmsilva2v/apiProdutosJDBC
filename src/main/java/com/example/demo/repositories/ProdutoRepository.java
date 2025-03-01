@@ -153,4 +153,49 @@ public class ProdutoRepository {
 			return null;
 		}
 	}
+	
+	public Produto findById(UUID id) {
+		
+		try {
+			
+			var connection = connectionFactory.getConnection();
+			
+			var query = """
+					SELECT
+						p.id as idproduto, p.nome as nomeproduto, p.preco, p.quantidade,
+						c.id as idcategoria, c.nome as nomecategoria
+					FROM produto p
+					INNER JOIN categoria c
+					ON c.id = p.categoria_id
+					WHERE p.id = ?
+					""";
+			
+			var statement = connection.prepareStatement(query);
+			statement.setObject(1, id);
+			
+			var result = statement.executeQuery();
+
+			Produto produto = null;
+			
+			if(result.next()) {
+				
+				produto = new Produto();
+				produto.setCategoria(new Categoria());
+				
+				produto.setId(UUID.fromString(result.getString("idproduto")));
+				produto.setNome(result.getString("nomeproduto"));
+				produto.setPreco(result.getDouble("preco"));
+				produto.setQuantidade(result.getInt("quantidade"));
+				produto.getCategoria().setId(UUID.fromString(result.getString("idcategoria")));
+				produto.getCategoria().setNome(result.getString("nomecategoria"));
+			}
+			
+			connection.close();
+			return produto;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

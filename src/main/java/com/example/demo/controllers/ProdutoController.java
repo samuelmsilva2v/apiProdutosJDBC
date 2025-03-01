@@ -54,4 +54,10 @@ public class ProdutoController {
 	public List<Produto> consultarProdutosPorNome(@PathVariable String nome) {
 		return produtoService.consultarProdutosPorNome(nome);
 	}
+	
+	@Operation(summary = "Serviço para consultar um produto por id.")
+	@GetMapping("consultar/id/{id}")
+	public Produto consultarProdutoPorId(@PathVariable UUID id) {
+		return produtoService.consultarProdutoPorId(id);
+	}
 }

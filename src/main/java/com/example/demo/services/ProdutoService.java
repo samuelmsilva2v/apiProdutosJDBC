@@ -56,4 +56,9 @@ public class ProdutoService {
 
 		return produtoRepository.findByName(nome);
 	}
+	
+	public Produto consultarProdutoPorId(UUID id) {
+		
+		return produtoRepository.findById(id);
+	}
 }
