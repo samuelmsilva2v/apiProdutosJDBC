@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.demo.entities.Categoria;
 import com.example.demo.entities.Produto;
 import com.example.demo.factories.ConnectionFactory;
 
@@ -109,7 +110,19 @@ public class ProdutoRepository {
 			
 			var connection = connectionFactory.getConnection();
             
-            var statement = connection.prepareStatement("SELECT * FROM produto WHERE nome ILIKE ? ORDER BY nome");
+            var query = """
+            		SELECT
+            			p.id as idproduto, p.nome as nomeproduto, 
+            		        		p.preco, p.quantidade,
+            			c.id as idcategoria, c.nome as nomecategoria
+            		FROM produto p
+            		INNER JOIN categoria c
+            		ON c.id = p.categoria_id
+            		WHERE p.nome ILIKE ?
+            		ORDER BY p.nome;
+         """;
+            
+            var statement = connection.prepareStatement(query);
             statement.setString(1, "%" + nome + "%");
             
             var result = statement.executeQuery();
@@ -119,10 +132,14 @@ public class ProdutoRepository {
             while (result.next()) {
             	
                 var produto = new Produto();
-                produto.setId(UUID.fromString(result.getString("id")));
-                produto.setNome(result.getString("nome"));
+                produto.setCategoria(new Categoria());
+                
+                produto.setId(UUID.fromString(result.getString("idproduto")));
+                produto.setNome(result.getString("nomeproduto"));
                 produto.setPreco(result.getDouble("preco"));
                 produto.setQuantidade(result.getInt("quantidade"));
+                produto.getCategoria().setId(UUID.fromString(result.getString("idcategoria")));
+                produto.getCategoria().setNome(result.getString("nomecategoria"));
                 
                 produtos.add(produto);
             }
